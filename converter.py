@@ -19,6 +19,9 @@ def convert_sqlite_syntax(sql):
     sql = re.sub(r';*?\bCREATE SEQUENCE\b.*?;', '', sql, flags=re.IGNORECASE | re.DOTALL)
     sql = re.sub(r';*?\bCOMMIT\b.*?;', '', sql, flags=re.IGNORECASE | re.DOTALL)
     sql = re.sub(r'\([^)]+\.NEXTVAL,', replace_nextval, sql, flags=re.IGNORECASE)
+    sql = re.sub(r'CONSTRAINT\s+[^ ]+\s+PRIMARY', 'PRIMARY',sql, flags=re.IGNORECASE)
+    sql = re.sub(r'CONSTRAINT\s+[^ ]+\s+FOREIGN', 'FOREIGN',sql, flags=re.IGNORECASE)
+    sql = re.sub(r';*?\bALTER TABLE\b.*?;', '', sql, flags=re.IGNORECASE | re.DOTALL)
     sql = re.sub(r'\n\s*\n', '\n', sql)
     sql = sql.strip()
     return sql
@@ -35,6 +38,6 @@ def oracle_to_sqlite(input_file, output_file):
     print(f'Archivo convertido exitosamente: {output_file}')
 
 if __name__ == "__main__":
-    oracle_file = 'TiendaInf.sql'
-    sqlite_file = 'TiendaInf_SQL_LITE.sql'
+    oracle_file = 'CentroFor.sql'
+    sqlite_file = 'CentroFor_SQL_LITE.sql'
     oracle_to_sqlite(oracle_file, sqlite_file)
