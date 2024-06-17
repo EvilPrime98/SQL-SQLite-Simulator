@@ -36,8 +36,13 @@ def ejecutar_consulta(query, nombre_bd):
 
 def cargar_sql(nombre_archivo, nombre_bd):
     try:
-        with open(nombre_archivo, 'r', encoding='utf-8') as file:
-            query = file.read()
+        with open(nombre_archivo, 'rb') as file:
+            contenido = file.read()
+        
+        try:
+            query = contenido.decode('utf-8')
+        except UnicodeDecodeError:
+            query = contenido.decode('latin-1') 
         
         query_convertida = convert_sqlite_syntax(query)
         
@@ -72,8 +77,13 @@ if archivo_sql is not None:
         nombre_temporal = "temp.sql"
         with open(nombre_temporal, 'wb') as f:
             f.write(contenido)
-
-        query_convertida = convert_sqlite_syntax(contenido.decode('utf-8'))
+        
+        try:
+            query = contenido.decode('utf-8')
+        except UnicodeDecodeError:
+            query = contenido.decode('latin-1')
+        
+        query_convertida = convert_sqlite_syntax(query)
         
         resultado = cargar_sql(nombre_temporal, nombre_bd)
         os.remove(nombre_temporal)
